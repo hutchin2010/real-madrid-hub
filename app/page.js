@@ -132,11 +132,8 @@ export default async function Home() {
       </main>
 
       <footer>
-      </main>
-
-      <footer>
         Tu centro del madridista · datos jalados en vivo desde API-Football y YouTube Data API
-      </footer>
+      <footer>
     </>
   );
 }
@@ -179,7 +176,7 @@ function NewsList({ result }) {
     <div>
       {result.data.map((n, i) => (
         
-          href={n.link}
+         <a href={n.link}
           target="_blank"
           rel="noopener noreferrer"
           className="video-card"
