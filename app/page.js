@@ -113,8 +113,7 @@ export default async function Home() {
             result={videosRamon}
           />
         </section>
-              </section>
-
+            
         <section className="section-block">
           <div className="section-head">
             <h2>Noticias del Real Madrid</h2>
