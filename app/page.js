@@ -131,7 +131,7 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer>
+     <footer>
         Tu centro del madridista · datos jalados en vivo desde API-Football y YouTube Data API
       <footer>
     </>
