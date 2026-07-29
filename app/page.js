@@ -1,15 +1,16 @@
-import { getRecentResults, getUpcomingFixtures, getLatestVideos } from "../lib/data";
+import { getRecentResults, getUpcomingFixtures, getLatestVideos, getRealMadridNews, getGeneralFootballNews } from "../lib/data";
 
 export const dynamic = "force-dynamic"; // nunca cachear: siempre datos frescos al abrir la página
 
 export default async function Home() {
-  const [recent, upcoming, videosDiego, videosRamon] = await Promise.all([
+  const [recent, upcoming, videosDiego, videosRamon, realMadridNews, generalNews] = await Promise.all([
     getRecentResults(),
     getUpcomingFixtures(),
     getLatestVideos("ByDiegoX10"),
     getLatestVideos("RamonAlvarezdeMon"),
+    getRealMadridNews(),
+    getGeneralFootballNews(),
   ]);
-
   const nextMatch = upcoming.ok && upcoming.data.length > 0 ? upcoming.data[0] : null;
 
   return (
@@ -112,11 +113,27 @@ export default async function Home() {
             result={videosRamon}
           />
         </section>
+            
+        <section className="section-block">
+          <div className="section-head">
+            <h2>Noticias del Real Madrid</h2>
+            <div className="updated">Vía Marca · cada visita</div>
+          </div>
+          <NewsList result={realMadridNews} />
+        </section>
+
+        <section className="section-block">
+          <div className="section-head">
+            <h2>Fútbol en general</h2>
+            <div className="updated">Vía Marca · cada visita</div>
+          </div>
+          <NewsList result={generalNews} />
+        </section>
       </main>
 
-      <footer>
+     <footer>
         Tu centro del madridista · datos jalados en vivo desde API-Football y YouTube Data API
-      </footer>
+              </footer>
     </>
   );
 }
@@ -151,7 +168,33 @@ function VideoChannel({ name, channelUrl, result }) {
     </div>
   );
 }
-
+function NewsList({ result }) {
+  if (!(result.ok && result.data.length > 0)) {
+    return <ApiNote reason={result.reason} what="las noticias" envVar="" />;
+  }
+  return (
+    <div>
+      {result.data.map((n, i) => (
+        
+         <a href={n.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="video-card"
+          key={n.link || i}
+        >
+          {n.thumbnail && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={n.thumbnail} alt={n.title} className="video-thumb" />
+          )}
+          <div className="video-info">
+            <h3>{n.title}</h3>
+            <p>{n.publishedAt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+}
 function ApiNote({ reason, what, envVar }) {
   const message =
     reason === "missing_key"
